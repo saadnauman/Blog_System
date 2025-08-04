@@ -14,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+use App\Models\User;
+
+Route::get('/user-mentions', function (\Illuminate\Http\Request $request) {
+    $search = $request->input('search');
+    return User::where('name', 'like', "%{$search}%")
+        ->orWhere('email', 'like', "%{$search}%")
+        ->limit(10)
+        ->get(['id', 'name']);
+});
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

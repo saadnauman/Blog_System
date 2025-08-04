@@ -48,6 +48,13 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin/categories')->group(funct
     Route::post('/{category}/edit', [CategoryController::class, 'update'])->name('categories.update');
     Route::post('/{category}/delete', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
+Route::middleware(['auth'])->group(function () {
+    //Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+   // Route::get('/posts/manage', [PostController::class, 'manage'])->name('posts.manage');
+
+    Route::post('/posts/{post}/hide', [PostController::class, 'hide'])->name('posts.hide');
+    Route::post('/posts/{post}/restore', [PostController::class, 'restore'])->name('posts.restore');
+});
 
 // Admin Dashboard
 Route::get('/admin/dashboard', function () {

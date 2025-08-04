@@ -26,7 +26,7 @@ class AuthController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-
+        //i could have added gates here by having the token assigned token be for admin or user
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
@@ -73,3 +73,9 @@ class AuthController extends Controller
         return redirect('/login');
     }
 } 
+//auth sanctum tokens could have been used here for api authentication if this was an api first application
+//but since this is a web application, session based authentication is used
+//if this was an api first application, i would have used sanctum or passport for api
+//authentication and would have returned tokens instead of redirecting to a dashboard
+//this is a simple authentication controller for a web application
+

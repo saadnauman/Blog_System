@@ -2,6 +2,7 @@
 
 @section('content')
 <h1 class="text-2xl font-bold mb-6">All Posts</h1>
+
 <form method="GET" action="" class="flex flex-wrap gap-2 mb-6" autocomplete="off" id="search-form">
     <div class="relative">
         <x-input name="search" id="search-input" placeholder="Search posts..." class="w-48" value="{{ request('search') }}" autocomplete="off" />
@@ -37,30 +38,58 @@
         <div class="flex justify-between items-center">
             <div>
                 <a href="{{ route('posts.show', $post) }}">
-                    <h2 class="font-semibold text-lg text-indigo-700 dark:text-indigo-300">{{ $post->title }}</h2>
+                    <h2 class="font-semibold text-lg text-indigo-700 dark:text-indigo-300">
+                        {{ $post->title }}
+                        @if($post->trashed())
+                            <span class="text-sm text-red-500 font-semibold ml-2">(Hidden)</span>
+                        @endif
+                    </h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
                         By {{ $post->user->name ?? 'Unknown' }} in {{ $post->category->name ?? 'Uncategorized' }} &middot; {{ $post->created_at->format('Y-m-d') }}
                     </p>
                 </a>
             </div>
+
             <div class="flex items-center gap-2">
                 @auth
-                    @if(Auth::user()->role === 'admin')
-                        <a href="{{ route('posts.edit', $post) }}" class="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-xs transition">Edit</a>
-                        <form method="POST" action="{{ route('posts.destroy', $post) }}" onsubmit="return confirm('Delete this post?');">
-                            @csrf
-                            <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs transition">Delete</button>
-                        </form>
+                    @if(Auth::user()->role === 'admin' || Auth::id() === $post->user_id)
+                        @if($post->trashed())
+                            @can('restore', $post)
+                            {{-- Restore --}}
+                            <form method="POST" action="{{ route('posts.restore', $post->id) }}">
+                                @csrf
+                                <x-button class="bg-green-600 hover:bg-green-700 text-xs">Restore</x-button>
+                            </form>
+                            @endcan
+                        @else
+                            {{-- Edit --}}
+                            <a href="{{ route('posts.edit', $post) }}" class="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-xs transition">Edit</a>
+                            @can('hide',$post)
+                            {{-- Hide --}}
+                            <form method="POST" action="{{ route('posts.hide', $post) }}">
+                                @csrf
+                                <x-button class="bg-yellow-600 hover:bg-yellow-700 text-xs">Hide</x-button>
+                            </form>
+                            @endcan
+                            {{-- Delete --}}
+                            <form method="POST" action="{{ route('posts.destroy', $post) }}" onsubmit="return confirm('Delete this post?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs transition">Delete</button>
+                            </form>
+                        @endif
                     @endif
                 @endauth
+
                 <span class="text-indigo-600 dark:text-indigo-300 font-semibold">Read &rarr;</span>
             </div>
         </div>
     </div>
     @empty
-    <div class="text-gray-500 dark:text-gray-400">No posts found.</div>
+        <div class="text-gray-500 dark:text-gray-400">No posts found.</div>
     @endforelse
 </div>
+
 <div class="mt-6 flex justify-center">
     {{ $posts->links() }}
 </div>

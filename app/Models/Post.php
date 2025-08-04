@@ -55,4 +55,9 @@ class Post extends Model
             'author' => $array['author'],
         ];
     }
+    //to get tagged users
+    public function taggedUsers()
+{
+    return $this->belongsToMany(User::class, 'post_user_tags');
+}
 } 

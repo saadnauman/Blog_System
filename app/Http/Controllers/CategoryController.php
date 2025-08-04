@@ -34,8 +34,7 @@ try {
         return back()->with('status', 'Category updated!');
     } catch (\Illuminate\Validation\ValidationException $e) {
         // Send a custom message like a success one, but for error
-        return back()->with('error', 'Category name must be unique and properly filled.');
-    }
+        return back()->with('error', 'Category name must be unique' );   }
     }
 
     public function destroy(Category $category)
