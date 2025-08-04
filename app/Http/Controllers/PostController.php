@@ -240,12 +240,21 @@ foreach ($allTaggedUsers as $user) {
     // Merge manually tagged users if any
     $manualTags = $validated['tagged_user_ids'] ?? [];
     $allTaggedUserIds = array_unique(array_merge($manualTags, $mentionedUserIds));
-
+    //dd($allTaggedUserIds);
     $post->taggedUsers()->sync($allTaggedUserIds);
+   // ✅ Fetch the actual User models for notification
+    $allTaggedUsers = \App\Models\User::whereIn('id', $allTaggedUserIds)->get();
+    $post = Post::with('user')->find($post->id); // make sure the post has user loaded
 
+
+
+// Notify each user
+   foreach ($allTaggedUsers as $user) {
+      $user->notify(new \App\Notifications\UserTaggedInPost($post));
+    }
     return redirect()->route('posts.show', $post)->with('status', 'Post updated!');
-}
 
+   }
 
     public function destroy(Post $post)
     {
