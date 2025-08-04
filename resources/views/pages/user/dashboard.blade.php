@@ -28,16 +28,16 @@
         <h2 class="font-semibold text-lg text-yellow-700 dark:text-yellow-300 mb-4">🔔 Notifications</h2>
         <ul class="space-y-2">
             @foreach (auth()->user()->notifications as $notification)
-                @php $data = $notification->data; @endphp
                 <li class="text-gray-800 dark:text-gray-200 bg-yellow-50 dark:bg-yellow-900 px-4 py-2 rounded">
-                    @if (isset($data['post_title'], $data['post_id'], $data['tagger_name']))
-                        {{ $data['tagger_name'] }} tagged you in a post titled 
-                        <a href="{{ route('posts.show', $data['post_id']) }}" 
+                    {{ $notification->data['tagger_name'] ?? 'Someone' }} tagged you in 
+                    a post titled 
+                    @if (isset($notification->data['post_id'], $notification->data['post_title']))
+                        <a href="{{ route('posts.show', $notification->data['post_id']) }}"
                            class="text-blue-600 dark:text-blue-300 underline">
-                            "{{ $data['post_title'] }}"
+                            "{{ $notification->data['post_title'] }}"
                         </a>.
                     @else
-                        🔔 You have a new notification.
+                        <em class="text-red-400">(Post not available)</em>
                     @endif
                 </li>
             @endforeach
@@ -52,11 +52,13 @@
 
 <!-- Post Actions -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <a href="/posts/create" class="block bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow p-6 border border-gray-100 dark:border-gray-700 hover:border-indigo-400 dark:hover:border-indigo-500">
+    <a href="{{ route('posts.create') }}"
+       class="block bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow p-6 border border-gray-100 dark:border-gray-700 hover:border-indigo-400 dark:hover:border-indigo-500">
         <h2 class="font-semibold text-lg text-indigo-700 dark:text-indigo-300 mb-2">Create Post</h2>
         <p class="text-gray-500 dark:text-gray-400">Write a new blog post.</p>
     </a>
-    <a href="/user/posts" class="block bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow p-6 border border-gray-100 dark:border-gray-700 hover:border-indigo-400 dark:hover:border-indigo-500">
+    <a href="{{ route('user.posts') }}"
+       class="block bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition-shadow p-6 border border-gray-100 dark:border-gray-700 hover:border-indigo-400 dark:hover:border-indigo-500">
         <h2 class="font-semibold text-lg text-indigo-700 dark:text-indigo-300 mb-2">My Posts</h2>
         <p class="text-gray-500 dark:text-gray-400">View and edit your posts.</p>
     </a>

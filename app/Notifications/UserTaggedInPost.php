@@ -39,9 +39,10 @@ class UserTaggedInPost extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'message' => 'You were tagged in a post!',
-            'post_id' => $this->post->id,
-            'tagger_id' => auth()->id(),
+            'message' => "{$this->post->user->name} tagged you in a post titled \"{$this->post->title}\".",
+        'post_id' => $this->post->id,
+        'post_title' => $this->post->title,
+        'tagger_name' => $this->post->user->name,
         ];
     }
     

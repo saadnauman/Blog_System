@@ -181,6 +181,9 @@ public function suggestions(Request $request)
     $post->taggedUsers()->sync($allTaggedUserIds);
    // ✅ Fetch the actual User models for notification
 $allTaggedUsers = \App\Models\User::whereIn('id', $allTaggedUserIds)->get();
+$post = Post::with('user')->find($post->id); // make sure the post has user loaded
+
+
 
 // Notify each user
 foreach ($allTaggedUsers as $user) {
