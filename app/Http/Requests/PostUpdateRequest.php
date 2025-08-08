@@ -10,7 +10,7 @@ class PostUpdateRequest extends FormRequest
     {
         $post = $this->route('post');
         // Admins can edit all posts, users only their own
-        return auth()->user()->hasRole('admin') || auth()->id() === $post->user_id;
+        return $this->user()->hasRole('admin') || auth()->id() === $post->user_id;
     }
 
     public function rules(): array

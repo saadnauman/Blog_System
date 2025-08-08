@@ -24,13 +24,16 @@ Route::post('/login', [AuthController::class, 'login']);
 // ====================
 // Protected Routes (Sanctum Auth Required)
 // ====================
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->middleware('auth:sanctum');
+
 Route::middleware(['auth:sanctum'])->group(function () {
 
     // ----------- Auth User Info & Logout -----------
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::post('/logout', [AuthController::class, 'logout']);
+    //Route::post('/logout', [AuthController::class, 'logout']);
 
     // ====================
     // Post Routes

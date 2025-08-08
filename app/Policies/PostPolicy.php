@@ -11,10 +11,10 @@ class PostPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
-    {
+    //public function viewAny(User $user): bool
+    //{
         //
-    }
+    //}
 
     /**
      * Determine whether the user can view the model.
@@ -24,10 +24,10 @@ class PostPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
-    {
+    //public function create(User $user): bool
+    //{
         //
-    }
+    //}
 
     /**
      * Determine whether the user can update the model.
@@ -64,10 +64,10 @@ class PostPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Post $post): bool
-    {
-        //
-    }
+    // public function forceDelete(User $user, Post $post): bool
+    // {
+    //     //
+    // }
     public function hide(User $user, Post $post): bool
     {
     return $user->role==='admin'; // Only admin can hide

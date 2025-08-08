@@ -9,6 +9,8 @@ use App\Http\Resources\Auth\AuthResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request;
+
 
 class AuthController extends Controller
 {
@@ -44,12 +46,15 @@ class AuthController extends Controller
         return new AuthResource($user, $token);
     }
 
-    public function logout()
-    {
-        auth()->user()->currentAccessToken()->delete();
-
+    public function logout(Request $request)
+    { 
+        // Revoke the user's token
+        // This will invalidate the token and the user will have to log in again
+        $request->user()->currentAccessToken()->delete();
+       
         return response()->json([
-            'meta' => ['message' => 'Logged out successfully']
+            'message' => 'Logged out successfully'
         ]);
     }
+
 }

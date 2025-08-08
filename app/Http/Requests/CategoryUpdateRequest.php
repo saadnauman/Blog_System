@@ -8,7 +8,7 @@ class CategoryUpdateRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->user()?->hasRole('admin') ?? false;
+        return $this->auth()->user()?->hasRole('admin') ?? false;
     }
 
     public function rules(): array

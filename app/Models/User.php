@@ -2,17 +2,29 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
+/**
+ * @mixin \Spatie\Permission\Traits\HasRoles
+ * 
+ * @method bool hasRole(string|array|\Spatie\Permission\Models\Role $roles, string|null $guard = null)
+ * @method bool assignRole(...$roles)
+ * @method bool removeRole(string|\Spatie\Permission\Models\Role $role)
+ * @method bool hasPermissionTo(string|\Spatie\Permission\Models\Permission $permission, string|null $guard = null)
+ * @method bool can(string $permission)
+ * @method \Illuminate\Database\Eloquent\Collection getRoleNames()
+ * @method \Illuminate\Database\Eloquent\Collection getPermissionNames()
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
-
 
     /**
      * The attributes that are mass assignable.
@@ -45,10 +57,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the user's role name
+     */
     public function getRole(): string
     {
         return $this->getRoleNames()->first() ?? 'no-role';
     }
+
     /**
      * Get the posts for the user.
      */
@@ -57,6 +74,9 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    /**
+     * Get posts where user is tagged
+     */
     public function taggedInPosts()
     {
         return $this->belongsToMany(Post::class, 'post_user_tags');
