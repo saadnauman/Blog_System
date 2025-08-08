@@ -19,10 +19,7 @@ class PostPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Post $post): bool
-    {
-        //
-    }
+    
 
     /**
      * Determine whether the user can create models.
@@ -37,7 +34,11 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        //
+        if ($user->hasRole('admin')) {
+        return true;
+    }
+
+    return $post->user_id === $user->id;
     }
 
     /**
@@ -45,7 +46,11 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        //
+        if ($user->hasRole('admin')) {
+        return true;
+    }
+
+    return $post->user_id === $user->id;
     }
 
     /**
@@ -67,6 +72,15 @@ class PostPolicy
     {
     return $user->role==='admin'; // Only admin can hide
    }
+   public function view(User $user, Post $post): bool
+{
+    // Example logic: admin can view all, others only their own
+    if ($user->hasRole('admin')) {
+        return true;
+    }
+
+    return $post->user_id === $user->id;
+}
 
     
 }

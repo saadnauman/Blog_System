@@ -16,7 +16,7 @@ class Post extends Model
         'category_id',
         'title',
         'body',
-        'is_published',
+        //'is_published',
     ];
 
     protected $casts = [

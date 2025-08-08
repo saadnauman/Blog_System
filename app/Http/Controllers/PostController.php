@@ -17,6 +17,7 @@ class PostController extends Controller
         }
     }
     // Manage posts (admin or own posts)
+    //the function is not being used anymore, but it can be used to manage posts
 public function manage()
 {
     $user = Auth::user();
@@ -263,7 +264,7 @@ foreach ($allTaggedUsers as $user) {
         return redirect()->route('posts.index')->with('status', 'Post deleted!');
     }
 
-    
+    //users own posts
     public function userPosts()
     {
       $posts = Post::with('category')
@@ -273,6 +274,7 @@ foreach ($allTaggedUsers as $user) {
 
         return view('pages.posts.user_posts', compact('posts'));
     }
+    // Admin can hide posts (soft delete)
     public function hide(Post $post)
 {
     try {
@@ -291,7 +293,7 @@ foreach ($allTaggedUsers as $user) {
     }
 }
 
-
+//admin can restore soft deleted posts
 public function restore($id)
 {
     $post = Post::withTrashed()->findOrFail($id);
