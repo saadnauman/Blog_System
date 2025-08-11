@@ -23,6 +23,8 @@ class RolePermissionSeeder extends Seeder
             'post.update.any',
             'post.delete.own',
             'post.delete.any',
+            'post.restore.own',
+            'post.restore.any',
 
             // 📌 Categories (admin only)
             'category.create',
