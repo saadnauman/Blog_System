@@ -67,6 +67,7 @@ class PostTest extends TestCase
         $this->assertDatabaseHas('posts', ['title' => 'Admin Post', 'user_id' => $this->admin->id]);
     }
 
+
     /** @test */
     public function user_can_create_own_post()
     {
